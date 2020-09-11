@@ -26,6 +26,7 @@ def vectorize(sentence):
 def cosine_distance_with_tensors(s1, s2):
 
     from scipy.spatial import distance
+
     text_to_vector_v1 = vectorize(s1)
     text_to_vector_v2 = vectorize(s2)
     cosine = distance.cosine(text_to_vector_v1, text_to_vector_v2)

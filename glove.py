@@ -1,7 +1,5 @@
 import re
 from pymystem3 import Mystem
-import requests
-import urllib.request
 from scipy import spatial
 
 m = Mystem()
@@ -27,18 +25,15 @@ def preprocess(raw_text):
     return final
 
 def compare(result, model):
-    # result = preprocess(result)
-    # model = preprocess(model)
-    # result = result.split(" ")
-    # model = model.split(" ")
-    # all_words_in_sentences = result + model
-    # all_words_in_sentences = list(set(all_words_in_sentences))
-    # vec1_empty = [None] * len(all_words_in_sentences)
-    # vec2_empty = [None] * len(all_words_in_sentences)
+    result = preprocess(result)
+    model = preprocess(model)
+    all_words_in_sentences = result + model
+    all_words_in_sentences = list(set(all_words_in_sentences))
+    vec1_empty = [None] * len(all_words_in_sentences)
+    vec2_empty = [None] * len(all_words_in_sentences)
 
-    # vector_1 = createVector(vec1_empty, result, all_words_in_sentences)
-    # vector_2 = createVector(vec2_empty, model, all_words_in_sentences)
-    # cosine = spatial.distance.cosine(vector_1, vector_2)
+    vector_1 = createVector(vec1_empty, result, all_words_in_sentences)
+    vector_2 = createVector(vec2_empty, model, all_words_in_sentences)
+    cosine = spatial.distance.cosine(vector_1, vector_2)
 
-    # return round((1 - cosine) * 100, 2)
-    return 67
+    return round((1 - cosine) * 100, 2)

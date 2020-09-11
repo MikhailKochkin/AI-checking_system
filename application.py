@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_restful import reqparse, abort, Api, Resource
 from tensor_algo import cosine_distance_with_tensors
-# from glove import compare
+from glove import compare
 
 application = Flask(__name__)
 api = Api(application)
@@ -26,15 +26,12 @@ class Checker(Resource):
         filter(lambda x: x != "," or x != "." or x != ":", answer_split)
         sample_split = sample.split(" ")
         filter(lambda x: x != "," or x != "." or x != ":", sample_split)
-        # if len(answer_split) <= 3 or len(sample_split) <= 3:
-        #     res = compare(answer, sample)
-        # else:
-        #     res = cosine_distance_with_tensors(answer, sample)
+        if len(answer_split) <= 3 or len(sample_split) <= 3:
+            res = compare(answer, sample)
+        else:
+            res = cosine_distance_with_tensors(answer, sample)
 
         comment = 0
-
-        res = cosine_distance_with_tensors(answer, sample)
-
 
         if res < 70:
             if len(sample_split) / len(answer_split) > 2:
@@ -51,5 +48,11 @@ class Checker(Resource):
 api.add_resource(Index, "/")
 api.add_resource(Checker, "/checker")
 
+# if __name__ == "__main__":
+#     application.run(debug=True)
+
 if __name__ == "__main__":
-    application.run(debug=True)
+    # Setting debug to True enables debug output. This line should be
+    # removed before deploying a production app.
+    # application.debug = True
+    application.run()
