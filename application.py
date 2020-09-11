@@ -26,14 +26,14 @@ class Checker(Resource):
         filter(lambda x: x != "," or x != "." or x != ":", answer_split)
         sample_split = sample.split(" ")
         filter(lambda x: x != "," or x != "." or x != ":", sample_split)
-        if len(answer_split) <= 3 or len(sample_split) <= 3:
-            res = compare(answer, sample)
-        else:
-            res = cosine_distance_with_tensors(answer, sample)
+        # if len(answer_split) <= 3 or len(sample_split) <= 3:
+        #     res = compare(answer, sample)
+        # else:
+        #     res = cosine_distance_with_tensors(answer, sample)
 
         comment = 0
 
-        # res = cosine_distance_with_tensors(answer, sample)
+        res = compare(answer, sample)
 
 
         if res < 70:
