@@ -33,7 +33,7 @@ class Checker(Resource):
 
         comment = 0
 
-        res = compare(answer, sample)
+        res = cosine_distance_with_tensors(answer, sample)
 
 
         if res < 70:
