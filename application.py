@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_restful import reqparse, abort, Api, Resource
 from tensor_algo import cosine_distance_with_tensors
-from glove import compare
+# from glove import compare
 
 application = Flask(__name__)
 api = Api(application)
