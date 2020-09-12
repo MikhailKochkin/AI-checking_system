@@ -59,8 +59,8 @@ class Checker(Resource):
 
     def post(self):
         args = parser.parse_args()
-        answer = str(args.answer1)
-        sample = str(args.answer2)
+        sample = str(args.answer1)
+        answer = str(args.answer2)
         answer_split = answer.split(" ")
         filter(lambda x: x != "," or x != "." or x != ":", answer_split)
         sample_split = sample.split(" ")
