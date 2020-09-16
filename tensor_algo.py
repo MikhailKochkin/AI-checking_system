@@ -1,12 +1,12 @@
 import boto3
 import json
-import settings
+import os
 
 client = boto3.client(
         "sagemaker-runtime", 
         region_name="us-east-1", 
-        aws_access_key_id=settings.data['id'],
-        aws_secret_access_key= settings.data['key'])
+        aws_access_key_id=os.environ.get('ID'),
+        aws_secret_access_key=os.environ.get('KEY'))
 
 def vectorize(sentence):
     endpoint_name = (
