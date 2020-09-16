@@ -41,9 +41,9 @@ def compare(result, model):
 
     return round((1 - cosine) * 100, 2)
 
-application = Flask(__name__)
-CORS(application)
-api = Api(application)
+app = Flask(__name__)
+CORS(app)
+api = Api(app)
 
 parser = reqparse.RequestParser()
 parser.add_argument("answer1")
@@ -94,4 +94,4 @@ if __name__ == "__main__":
     # Setting debug to True enables debug output. This line should be
     # removed before deploying a production app.
     # application.debug = True
-    application.run()
+    app.run()
