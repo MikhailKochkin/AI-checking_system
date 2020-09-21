@@ -66,7 +66,7 @@ class Checker(Resource):
         filter(lambda x: x != "," or x != "." or x != ":", answer_split)
         sample_split = sample.split(" ")
         filter(lambda x: x != "," or x != "." or x != ":", sample_split)
-        if len(answer_split) <= 3 and len(sample_split) <= 3x:
+        if len(answer_split) <= 3 and len(sample_split) <= 3:
             res = compare(answer, sample)
         else:
             res = cosine_distance_with_tensors(answer, sample)
