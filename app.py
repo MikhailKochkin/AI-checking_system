@@ -37,6 +37,7 @@ def compare(result, model):
 
     vector_1 = createVector(vec1_empty, result, all_words_in_sentences)
     vector_2 = createVector(vec2_empty, model, all_words_in_sentences)
+
     cosine = spatial.distance.cosine(vector_1, vector_2)
 
     return round((1 - cosine) * 100, 2)
@@ -65,7 +66,7 @@ class Checker(Resource):
         filter(lambda x: x != "," or x != "." or x != ":", answer_split)
         sample_split = sample.split(" ")
         filter(lambda x: x != "," or x != "." or x != ":", sample_split)
-        if len(answer_split) <= 3 or len(sample_split) <= 3:
+        if len(answer_split) <= 3 and len(sample_split) <= 3x:
             res = compare(answer, sample)
         else:
             res = cosine_distance_with_tensors(answer, sample)
