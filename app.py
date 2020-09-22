@@ -5,7 +5,7 @@ from pymystem3 import Mystem
 from scipy import spatial
 from flask_cors import CORS
 
-m = Mystem()
+# m = Mystem()
 
 def createVector(vec, arr, words):
     for i in range(len(words)):
@@ -13,23 +13,23 @@ def createVector(vec, arr, words):
         vec[i] = num
     return vec
 
-def preprocess(raw_text):
-    # 1. keep only words
-    letters_only_text = raw_text
-    # 2. convert to lower case and split
-    words = letters_only_text.lower().split()
-    # 3. remove \n
-    break_free_words = [word.rstrip("\n") for word in words]
-    # 5. lemmatize
-    lemmatized_words = [m.lemmatize(word) for word in break_free_words]
-    final = []
-    for i in lemmatized_words:
-        final.append(i[0])
-    return final
+# def preprocess(raw_text):
+#     # 1. keep only words
+#     letters_only_text = raw_text
+#     # 2. convert to lower case and split
+#     words = letters_only_text.lower().split()
+#     # 3. remove \n
+#     break_free_words = [word.rstrip("\n") for word in words]
+#     # 5. lemmatize
+#     lemmatized_words = [m.lemmatize(word) for word in break_free_words]
+#     final = []
+#     for i in lemmatized_words:
+#         final.append(i[0])
+#     return final
 
 def compare(result, model):
-    result = preprocess(result)
-    model = preprocess(model)
+    # result = preprocess(result)
+    # model = preprocess(model)
     all_words_in_sentences = result + model
     all_words_in_sentences = list(set(all_words_in_sentences))
     vec1_empty = [None] * len(all_words_in_sentences)
@@ -67,8 +67,10 @@ class Checker(Resource):
         sample_split = sample.split(" ")
         filter(lambda x: x != "," or x != "." or x != ":", sample_split)
         if len(answer_split) <= 3 and len(sample_split) <= 3:
+            print(1)
             res = compare(answer, sample)
         else:
+            print(2)
             res = cosine_distance_with_tensors(answer, sample)
 
         comment = 0
