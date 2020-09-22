@@ -4,6 +4,9 @@ from tensor_algo import cosine_distance_with_tensors
 from pymystem3 import Mystem
 from scipy import spatial
 from flask_cors import CORS
+from langdetect import detect
+from porter2stemmer import Porter2Stemmer
+
 
 def createVector(vec, arr, words):
     for i in range(len(words)):
@@ -12,21 +15,31 @@ def createVector(vec, arr, words):
     return vec
 
 def preprocess(raw_text):
+    lang = detect(raw_text)
     # 1. keep only words
     letters_only_text = raw_text
     # 2. convert to lower case and split
     words = letters_only_text.lower().split()
     # 3. remove \n
-    break_free_words = [word.rstrip("\n") for word in words]
+    break_free_words = words
+    # [word.rstrip("\n") for word in words]
     # 5. lemmatize
-    lemmatized_words = [m.lemmatize(word) for word in break_free_words]
+    lemmatized_words = []
+    print(break_free_words)
+    if(lang == 'ru'):
+        m = Mystem()
+        for word in break_free_words:
+            a = m.lemmatize(word) 
+            lemmatized_words.append(a[0])
+    else:
+        stemmer = Porter2Stemmer()
+        lemmatized_words = [stemmer.stem(word) for word in break_free_words]
     final = []
     for i in lemmatized_words:
-        final.append(i[0])
+        final.append(i)
     return final
 
 def compare(result, model):
-    m = Mystem()
     result = preprocess(result)
     model = preprocess(model)
     all_words_in_sentences = result + model
