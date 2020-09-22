@@ -69,7 +69,9 @@ class Checker(Resource):
             print(1)
             res = compare(answer, sample)
         else:
+            res = cosine_distance_with_tensors(answer, sample)
             print(2)
+
         comment = 0
 
         if res < 70:
