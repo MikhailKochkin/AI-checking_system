@@ -2,10 +2,10 @@ import boto3
 import json
 import os
 import os
-import openai
+# import openai
 
 # Load your API key from an environment variable or secret management service
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# openai.api_key = os.getenv("OPENAI_API_KEY")
 
 client = boto3.client(
         "sagemaker-runtime", 
@@ -32,12 +32,12 @@ def vectorize(sentence):
     res = json.loads((response["Body"].read().decode()))
     return res["predictions"][0]
 
-def openEmbed(string):
-    response = openai.Embedding.create(
-        input=string,
-        model="text-embedding-ada-002")
-    embeddings = response['data'][0]['embedding']
-    return embeddings
+# def openEmbed(string):
+#     response = openai.Embedding.create(
+#         input=string,
+#         model="text-embedding-ada-002")
+#     embeddings = response['data'][0]['embedding']
+#     return embeddings
 
 def cosine_distance_with_tensors(s1, s2):
 
