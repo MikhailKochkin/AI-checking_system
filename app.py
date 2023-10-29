@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from flask_restful import reqparse, abort, Api, Resource
 from tensor_algo import cosine_distance_with_tensors
 from pymystem3 import Mystem
@@ -144,8 +144,6 @@ def normalize_text(text):
 
 
 def is_word_present(word, text):
-    # word = preprocess_word(normalize_text(word.lower()), text.lower())
-    # text = preprocess(normalize_text(text.lower()))
     word = normalize_text(word.lower())
     text = normalize_text(text.lower())
 
@@ -164,6 +162,9 @@ class Checker(Resource):
         return {"goal": "compare strings"}
 
     def post(self):
+        # print("here")
+        # print("Headers:", request.headers)
+        # print("JSON Payload:", request.get_json())
         args = parser.parse_args()
         sample = str(args.answer1)
         answer = str(args.answer2)
@@ -172,19 +173,18 @@ class Checker(Resource):
             return {"res": "100", "comment": "", "size_difference_percent": 0}
 
         answer_preprocessed = preprocess(answer)
+        
         sample_preprocessed = preprocess(sample)
 
-        # Check if a word in square brackets in answer1 is missing in answer2
-        # print("sample", sample)
+        # Check if a word in square brackets [] in answer1 is missing in answer2
         words_in_brackets = re.findall(
             r'\[(.*?)\]', "".join(sample))
-        # print("words_in_brackets", words_in_brackets)
 
         for word in words_in_brackets:
             if not is_word_present(word, answer):
                 return {"res": "0", "comment": "key_info_missing", "size_difference_percent": 0}
 
-         # Check if a word in asterisks in answer1 is present in answer2
+         # Check if a word in asterisks ** in answer1 is present in answer2
         words_in_asterisks = re.findall(r'\*(.*?)\*', "".join(sample))
 
         for word in words_in_asterisks:
@@ -195,9 +195,11 @@ class Checker(Resource):
             sample = sample.replace('*' + word + '*', '')
 
          # Check if a word in angle brackets in answer1 is present in answer2
+
         words_in_angles = re.findall(r'\<(.*?)\>', "".join(sample))
 
         for word in words_in_angles:
+            print(word, answer)
             if is_word_present_strict(word, answer):
                 return {"res": "0", "comment": "error_words_found_strict", "size_difference_percent": 0}
 
@@ -247,4 +249,3 @@ if __name__ == "__main__":
     # removed before deploying a production app.
     app.debug = True
     app.run(host='localhost',port=8000, debug=True)
-

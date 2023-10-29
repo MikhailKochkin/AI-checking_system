@@ -16,7 +16,7 @@ Jinja2==2.11.2
 jmespath==0.10.0
 langdetect==1.0.8
 MarkupSafe==1.1.1
-numpy==1.19.2
+numpy==1.26.1
 porter2stemmer==1.0
 pymystem3==0.2.0
 python-dateutil==2.8.1
