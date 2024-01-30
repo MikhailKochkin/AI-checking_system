@@ -21,6 +21,7 @@ def createVector(vec, arr, words):
 
 
 def string_to_list(text):
+    print(text)
     words = text.split(" ")
     if len(words) > 1:
         return words
