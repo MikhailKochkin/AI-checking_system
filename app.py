@@ -21,7 +21,6 @@ def createVector(vec, arr, words):
 
 
 def string_to_list(text):
-    print(text)
     words = text.split(" ")
     if len(words) > 1:
         return words
@@ -163,9 +162,6 @@ class Checker(Resource):
         return {"goal": "compare strings"}
 
     def post(self):
-        # print("here")
-        # print("Headers:", request.headers)
-        # print("JSON Payload:", request.get_json())
         args = parser.parse_args()
         sample = str(args.answer1)
         answer = str(args.answer2)
@@ -173,9 +169,11 @@ class Checker(Resource):
         if sample.strip() == "" and answer.strip() == "":
             return {"res": "100", "comment": "", "size_difference_percent": 0}
 
-        answer_preprocessed = preprocess(answer)
-        
-        sample_preprocessed = preprocess(sample)
+        # answer_preprocessed = preprocess(answer)
+        # sample_preprocessed = preprocess(sample)
+
+        answer_preprocessed = answer
+        sample_preprocessed = sample
 
         # Check if a word in square brackets [] in answer1 is missing in answer2
         words_in_brackets = re.findall(
@@ -212,10 +210,10 @@ class Checker(Resource):
         sample_split = sample.split(" ")
         filter(lambda x: x != "," or x != "." or x != ":", sample_split)
 
-        if len(answer_split) <= 3 and len(sample_split) <= 3:
-            res = compare(answer, sample)
-        else:
-            res = cosine_distance_with_tensors(answer, sample)
+        # if len(answer_split) <= 3 and len(sample_split) <= 3:
+        #     res = compare(answer, sample)
+        # else:
+        res = cosine_distance_with_tensors(answer, sample)
 
         comment = 0
 
