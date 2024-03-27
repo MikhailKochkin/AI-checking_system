@@ -205,6 +205,15 @@ class Checker(Resource):
         for word in words_in_angles:
             sample = sample.replace('<' + word + '>', '')
 
+        def extract_sentences(text):
+            # Define the pattern to match the sentences
+            pattern = r'\|([^\|]+)\|'
+            # Replace all matches of the pattern in the text with an empty string
+            result = re.sub(pattern, '', text)
+            return result
+        
+        sample = extract_sentences(sample)
+
         answer_split = answer.split(" ")
         filter(lambda x: x != "," or x != "." or x != ":", answer_split)
         sample_split = sample.split(" ")
