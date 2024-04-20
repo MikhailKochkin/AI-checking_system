@@ -226,11 +226,11 @@ class Checker(Resource):
 
         comment = 0
 
-        if res < 70:
+        if res < 65:
             if len(sample_split) / len(answer_split) > 2:
-                comment = "Дайте более развернутый ответ"
+                comment = "more_detailed_response_recommended"
             elif len(answer_split) / len(sample_split) > 2:
-                comment = "Дайте более короткий ответ"
+                comment = "more_concise_response_recommended"
 
         sample_words = len(sample.split())
         answer_words = len(answer.split())
