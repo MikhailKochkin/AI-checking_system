@@ -156,6 +156,20 @@ def is_word_present_strict(word, text):
 
     return word[0] in text
 
+def contains_only_numbers(s):
+    regex = r'^[0-9]+$'
+    return bool(re.match(regex, s))
+
+def compare_strings(str1, str2):
+    if len(str1) != len(str2):
+        return False
+
+    for i in range(len(str1)):
+        if str1[i] != str2[i]:
+            return False
+
+    return True
+
 
 class Checker(Resource):
     def get(self):
@@ -169,8 +183,11 @@ class Checker(Resource):
         if sample.strip() == "" and answer.strip() == "":
             return {"res": "100", "comment": "", "size_difference_percent": 0}
 
-        # answer_preprocessed = preprocess(answer)
-        # sample_preprocessed = preprocess(sample)
+        if contains_only_numbers(sample) and contains_only_numbers(answer):
+            if compare_strings(sample, answer):
+                return {"res": "100", "comment": "equal_numbers", "size_difference_percent": 0}
+            else:
+                return {"res": "0", "comment": "different_numbers", "size_difference_percent": 0}
 
         answer_preprocessed = answer
         sample_preprocessed = sample
@@ -222,6 +239,7 @@ class Checker(Resource):
         # if len(answer_split) <= 3 and len(sample_split) <= 3:
         #     res = compare(answer, sample)
         # else:
+        
         res = cosine_distance_with_tensors(answer, sample)
 
         comment = 0
