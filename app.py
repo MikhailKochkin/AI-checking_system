@@ -187,7 +187,7 @@ class Checker(Resource):
             if compare_strings(sample, answer):
                 return {"res": "100", "comment": "equal_numbers", "size_difference_percent": 0}
             else:
-                return {"res": "0", "comment": "different_numbers", "size_difference_percent": 0}
+                return {"res": "1", "comment": "different_numbers", "size_difference_percent": 0}
 
         answer_preprocessed = answer
         sample_preprocessed = sample
@@ -198,14 +198,14 @@ class Checker(Resource):
 
         for word in words_in_brackets:
             if not is_word_present(word, answer):
-                return {"res": "0", "comment": "key_info_missing", "size_difference_percent": 0}
+                return {"res": "1", "comment": "key_info_missing", "size_difference_percent": 0}
 
          # Check if a word in asterisks ** in answer1 is present in answer2
         words_in_asterisks = re.findall(r'\*(.*?)\*', "".join(sample))
 
         for word in words_in_asterisks:
             if is_word_present(word, answer):
-                return {"res": "0", "comment": "error_words_found", "size_difference_percent": 0}
+                return {"res": "1", "comment": "error_words_found", "size_difference_percent": 0}
 
         for word in words_in_asterisks:
             sample = sample.replace('*' + word + '*', '')
@@ -217,7 +217,7 @@ class Checker(Resource):
         for word in words_in_angles:
             print(word, answer)
             if is_word_present_strict(word, answer):
-                return {"res": "0", "comment": "error_words_found_strict", "size_difference_percent": 0}
+                return {"res": "1", "comment": "error_words_found_strict", "size_difference_percent": 0}
 
         for word in words_in_angles:
             sample = sample.replace('<' + word + '>', '')
