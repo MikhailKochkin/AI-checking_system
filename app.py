@@ -67,7 +67,6 @@ def preprocess_word(word, raw_text):
         final.append(i)
 
     final = [re.sub(r'\[([^][]*)\]', r'[\1]', w) for w in final]
-
     return final
 
 
@@ -187,7 +186,7 @@ class Checker(Resource):
             if compare_strings(sample, answer):
                 return {"res": "100", "comment": "equal_numbers", "size_difference_percent": 0}
             else:
-                return {"res": "1", "comment": "different_numbers", "size_difference_percent": 0}
+                return {"res": "10", "comment": "different_numbers", "size_difference_percent": 0}
 
         answer_preprocessed = answer
         sample_preprocessed = sample
@@ -198,14 +197,14 @@ class Checker(Resource):
 
         for word in words_in_brackets:
             if not is_word_present(word, answer):
-                return {"res": "1", "comment": "key_info_missing", "size_difference_percent": 0}
+                return {"res": "10", "comment": "key_info_missing", "size_difference_percent": 0}
 
          # Check if a word in asterisks ** in answer1 is present in answer2
         words_in_asterisks = re.findall(r'\*(.*?)\*', "".join(sample))
 
         for word in words_in_asterisks:
             if is_word_present(word, answer):
-                return {"res": "1", "comment": "error_words_found", "size_difference_percent": 0}
+                return {"res": "10", "comment": "error_words_found", "size_difference_percent": 0}
 
         for word in words_in_asterisks:
             sample = sample.replace('*' + word + '*', '')
@@ -215,34 +214,54 @@ class Checker(Resource):
         words_in_angles = re.findall(r'\<(.*?)\>', "".join(sample))
 
         for word in words_in_angles:
-            print(word, answer)
             if is_word_present_strict(word, answer):
-                return {"res": "1", "comment": "error_words_found_strict", "size_difference_percent": 0}
+                return {"res": "10", "comment": "error_words_found_strict", "size_difference_percent": 0}
 
         for word in words_in_angles:
             sample = sample.replace('<' + word + '>', '')
 
-        def extract_sentences(text):
+        def extract_misleading_words(text):
             # Define the pattern to match the sentences
             pattern = r'\|([^\|]+)\|'
             # Replace all matches of the pattern in the text with an empty string
             result = re.sub(pattern, '', text)
             return result
         
-        sample = extract_sentences(sample)
+        def remove_misleading_words_from_answer(text, studentAnswer):
+            # Define the pattern to match the sentences
+            pattern = r'\|([^|]+)\|'
+            
+            # Extract the words matching the pattern from the text
+            words_to_remove = re.findall(pattern, text)
+            
+            # Preprocess the words in the words_to_remove list
+            preprocessed_words_to_remove = [' '.join(preprocess_word(word, text)) for word in words_to_remove]
+            
+            # Split the student answer into individual words
+            student_answer_words = studentAnswer.split()
+            
+            modified_student_answer_words = []
+            for word in student_answer_words:
+                preprocessed_word = ' '.join(preprocess_word(word, studentAnswer))
+                if preprocessed_word not in preprocessed_words_to_remove:
+                    modified_student_answer_words.append(word)
+            
+            return ' '.join(modified_student_answer_words)
+
+        answer = remove_misleading_words_from_answer(sample, answer)
+        sample = extract_misleading_words(sample)
 
         answer_split = answer.split(" ")
         filter(lambda x: x != "," or x != "." or x != ":", answer_split)
         sample_split = sample.split(" ")
         filter(lambda x: x != "," or x != "." or x != ":", sample_split)
 
-        # if len(answer_split) <= 3 and len(sample_split) <= 3:
-        #     res = compare(answer, sample)
-        # else:
+        if len(answer_split) <= 3 and len(sample_split) <= 3:
+            res = compare(answer, sample)
+        else:
+            res = cosine_distance_with_tensors(answer, sample)
         
-        res = cosine_distance_with_tensors(answer, sample)
-
-        comment = 0
+        comment = ""
 
         if res < 65:
             if len(sample_split) / len(answer_split) > 2:
